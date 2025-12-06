@@ -3,8 +3,9 @@ import TodoForm from "../components/TodoForm";
 
 export default function Todos() {
     const [todos, setTodos] = useState([]);
+    const [loading, setLoading] = useState(true); // 👈 ESTADO DE CARGA
 
-    
+  
     const addTodo = (title) => {
         const nuevo = {
             id: Date.now(),
@@ -22,18 +23,31 @@ export default function Todos() {
         setTodos(updated);
     };
 
-
+    
     const deleteTodo = (id) => {
-    const filtered = todos.filter(t => t.id !== id);
-    setTodos(filtered);
-};
-
+        const filtered = todos.filter(t => t.id !== id);
+        setTodos(filtered);
+    };
 
     useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/todos")
-            .then(res => res.json())
-            .then(data => setTodos(data.slice(0, 10)));
-    }, []);
+    const loadTodos = async () => {
+        try {
+            setLoading(true); 
+            
+            const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+            const data = await res.json();
+            
+            setTodos(data.slice(0, 10));
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    loadTodos();
+}, []);
+
 
     return (
         <div>
@@ -41,23 +55,30 @@ export default function Todos() {
 
             <TodoForm addTodo={addTodo} />
 
-            <ul>
-                {todos.map(todo => (
-                   <li key={todo.id}>
-    {todo.title} — {todo.completed ? "✔ Completado" : "✘ Pendiente"}
+            
+            {loading && <p>Cargando todos...</p>}
 
-    <button onClick={() => toggleTodo(todo.id)}>
-        Cambiar estado
-    </button>
+        
+            {!loading && (
+                <ul>
+                    {todos.map(todo => (
+                        <li key={todo.id}>
+                            {todo.title} —{" "}
+                            {todo.completed ? "✔ Completado" : "✘ Pendiente"}
 
-    <button onClick={() => deleteTodo(todo.id)}>
-        Eliminar
-    </button>
-</li>
+                            <button onClick={() => toggleTodo(todo.id)}>
+                                Cambiar estado
+                            </button>
 
-                ))}
-            </ul>
+                            <button onClick={() => deleteTodo(todo.id)}>
+                                Eliminar
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 }
+
 
