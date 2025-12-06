@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-<TodoForm addTodo={addTodo} />
 
 export default function TodoForm({ addTodo }) {
   const [text, setText] = useState("");

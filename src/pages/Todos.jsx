@@ -4,6 +4,7 @@ import TodoForm from "../components/TodoForm";
 export default function Todos() {
     const [todos, setTodos] = useState([]);
 
+    
     const addTodo = (title) => {
         const nuevo = {
             id: Date.now(),
@@ -11,6 +12,14 @@ export default function Todos() {
             completed: false,
         };
         setTodos([nuevo, ...todos]);
+    };
+
+   
+    const toggleTodo = (id) => {
+        const updated = todos.map(t =>
+            t.id === id ? { ...t, completed: !t.completed } : t
+        );
+        setTodos(updated);
     };
 
     useEffect(() => {
@@ -27,9 +36,17 @@ export default function Todos() {
 
             <ul>
                 {todos.map(todo => (
-                    <li key={todo.id}>{todo.title}</li>
+                    <li key={todo.id}>
+                        {todo.title} —{" "}
+                        {todo.completed ? "✔ Completado" : "✘ Pendiente"}
+
+                        <button onClick={() => toggleTodo(todo.id)}>
+                            Cambiar estado
+                        </button>
+                    </li>
                 ))}
             </ul>
         </div>
     );
 }
+
