@@ -9,9 +9,13 @@ export default function Todos() {
       .then(data => setTodos(data.slice(0, 10)));
   }, []);
 
-  return (
-    <div>
-      <h1>Todos</h1>
-    </div>
-  );
-}
+ return (
+  <div>
+    <h1>Todos</h1>
+    <ul>
+      {todos.map(todo => (
+        <li key={todo.id}>{todo.title}</li>
+      ))}
+    </ul>
+  </div>
+);}
