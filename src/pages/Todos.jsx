@@ -22,6 +22,13 @@ export default function Todos() {
         setTodos(updated);
     };
 
+
+    const deleteTodo = (id) => {
+    const filtered = todos.filter(t => t.id !== id);
+    setTodos(filtered);
+};
+
+
     useEffect(() => {
         fetch("https://jsonplaceholder.typicode.com/todos")
             .then(res => res.json())
@@ -36,14 +43,18 @@ export default function Todos() {
 
             <ul>
                 {todos.map(todo => (
-                    <li key={todo.id}>
-                        {todo.title} —{" "}
-                        {todo.completed ? "✔ Completado" : "✘ Pendiente"}
+                   <li key={todo.id}>
+    {todo.title} — {todo.completed ? "✔ Completado" : "✘ Pendiente"}
 
-                        <button onClick={() => toggleTodo(todo.id)}>
-                            Cambiar estado
-                        </button>
-                    </li>
+    <button onClick={() => toggleTodo(todo.id)}>
+        Cambiar estado
+    </button>
+
+    <button onClick={() => deleteTodo(todo.id)}>
+        Eliminar
+    </button>
+</li>
+
                 ))}
             </ul>
         </div>
